@@ -11,6 +11,13 @@ import CompressPanel from './components/CompressPanel/CompressPanel';
 import ConvertPanel from './components/ConvertPanel/ConvertPanel';
 import ExportPanel from './components/ExportPanel/ExportPanel';
 import BatchProcessor from './components/BatchProcessor/BatchProcessor';
+import CyberPanel from './components/CyberPanel/CyberPanel';
+import DrawPanel from './components/DrawPanel/DrawPanel';
+import DrawOverlay from './components/DrawPanel/DrawOverlay';
+import SelectionPanel from './components/SelectionPanel/SelectionPanel';
+import SelectionOverlay from './components/SelectionPanel/SelectionOverlay';
+import WatermarkPanel from './components/WatermarkPanel/WatermarkPanel';
+import FilterPanel from './components/FilterPanel/FilterPanel';
 
 import { fileToDataUrl, formatFileSize, generateOutputFilename, downloadBlob } from './utils/helpers';
 import { getImageDimensions, resizeImage, rotateImage, flipImage, type ResizeOptions } from './utils/imageResizer';
@@ -19,8 +26,13 @@ import { convertImage, loadHeicImage, isHeicFile, getFileFormat, type ConvertOpt
 import { readMetadata, stripMetadata, updateMetadata, metadataToJson, type MetadataResult } from './utils/metadataHandler';
 import { initOcrEngine, recognizeText, terminateOcrEngine, type OcrResult } from './utils/ocrEngine';
 import { applyAdjustments, getDefaultAdjustments, buildFilterString, type AdjustmentOptions } from './utils/imageAdjustments';
+import { scanForPayloads, encodeSteganography, decodeSteganography, generateErrorLevelAnalysis, deepScrub, type ScanReport } from './utils/cyberSecurity';
+import { applyAnnotations, type AnnotationTool, type AnnotationAction } from './utils/annotationEngine';
+import { removeBackgroundAI, magicWandSelection, type Point } from './utils/selectionEngine';
+import { applyWatermark, type WatermarkOptions } from './utils/watermarkEngine';
+import { calculateHistogram, applyColorFilter, type HistogramData, type FilterType } from './utils/filterEngine';
 
-export type TabId = 'resize' | 'compress' | 'convert' | 'adjust' | 'metadata' | 'ocr';
+export type TabId = 'resize' | 'compress' | 'convert' | 'adjust' | 'metadata' | 'ocr' | 'cyber' | 'draw' | 'select' | 'water' | 'filter';
 export type AppMode = 'single' | 'batch';
 
 export interface ImageInfo {
@@ -58,10 +70,40 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const liveFilterString = buildFilterString(adjustments);
 
+  // Cyber state
+  const [cyberDecodedMessage, setCyberDecodedMessage] = useState<string | null>(null);
+  const [cyberScanReport, setCyberScanReport] = useState<ScanReport | null>(null);
+
+  // Draw state
+  const [drawTool, setDrawTool] = useState<AnnotationTool>('freehand');
+  const [drawColor, setDrawColor] = useState<string>('#ff0000');
+  const [drawBrushSize, setDrawBrushSize] = useState<number>(5);
+  const [drawActions, setDrawActions] = useState<AnnotationAction[]>([]);
+
   // Live preview & source tracking state
   const [livePreviewEnabled, setLivePreviewEnabled] = useState(true);
   const [processedSourceTool, setProcessedSourceTool] = useState<string | null>(null);
   const [compressOptions, setCompressOptions] = useState<CompressOptions | null>(null);
+
+  // Selection state
+  const [magicWandTolerance, setMagicWandTolerance] = useState<number>(30);
+  const [magicWandModeActive, setMagicWandModeActive] = useState<boolean>(false);
+  const [aiProgress, setAiProgress] = useState<number>(0);
+  const [aiStatus, setAiStatus] = useState<string>('');
+
+  // Watermark state
+  const [watermarkOptions, setWatermarkOptions] = useState<WatermarkOptions>({
+    type: 'text',
+    position: 'bottom-right',
+    opacity: 0.8,
+    scale: 1.0,
+    rotation: 0,
+    color: '#ffffff'
+  });
+
+  // Filter state
+  const [activeFilter, setActiveFilter] = useState<FilterType>('none');
+  const [histogramData, setHistogramData] = useState<HistogramData | null>(null);
 
   // Toast notifications
   const [toasts, setToasts] = useState<ToastState[]>([]);
@@ -85,9 +127,14 @@ function App() {
     setProcessedInfo(null);
     setMetadata(null);
     setOcrResult(null);
+    setCyberDecodedMessage(null);
+    setCyberScanReport(null);
     setAdjustments(getDefaultAdjustments());
     setProcessedSourceTool(null);
     setCompressOptions(null);
+    setDrawActions([]);
+    setActiveFilter('none');
+    setHistogramData(null);
 
     try {
       let workingFile = file;
@@ -121,6 +168,11 @@ function App() {
       }
 
       showToast(`Loaded: ${workingFile.name} (${formatFileSize(workingFile.size)})`, 'success');
+      
+      // Compute histogram if we're on the filter tab
+      if (activeTab === 'filter') {
+        calculateHistogram(workingFile).then(setHistogramData).catch(console.error);
+      }
     } catch (err) {
       showToast(`Failed to load image: ${(err as Error).message}`, 'error');
     } finally {
@@ -221,7 +273,15 @@ function App() {
     }
   }, [originalFile, updateProcessedResult, showToast]);
 
-  // Adjustments handler
+  // Handle active tab change effects
+  useEffect(() => {
+    if (activeTab === 'filter' && originalFile) {
+      const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+      calculateHistogram(targetFile).then(setHistogramData).catch(console.error);
+    }
+  }, [activeTab, originalFile, processedBlob]);
+
+  // Adjustments handlers
   const handleAdjustmentsChange = useCallback((newAdjustments: AdjustmentOptions) => {
     setAdjustments(newAdjustments);
     setProcessedSourceTool(prev => prev === 'adjust' ? null : prev);
@@ -357,6 +417,202 @@ function App() {
     };
   }, []);
 
+  // Cyber handlers
+  const handleCyberScan = useCallback(async () => {
+    if (!originalFile) return;
+    setIsProcessing(true);
+    try {
+      const report = await scanForPayloads(originalFile);
+      setCyberScanReport(report);
+      showToast(report.isSafe ? 'Scan complete: File is safe.' : 'Scan complete: Threats detected!', report.isSafe ? 'success' : 'warning');
+    } catch (err) {
+      showToast(`Scan failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, showToast]);
+
+  const handleCyberEncode = useCallback(async (message: string) => {
+    if (!originalFile) return;
+    setIsProcessing(true);
+    try {
+      const blob = await encodeSteganography(originalFile, message);
+      await updateProcessedResult(blob, 'cyber');
+      showToast('Message encoded into image.', 'success');
+    } catch (err) {
+      showToast(`Encoding failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, updateProcessedResult, showToast]);
+
+  const handleCyberDecode = useCallback(async () => {
+    const fileToDecode = processedBlob ? new File([processedBlob], 'processed') : originalFile;
+    if (!fileToDecode) return;
+    setIsProcessing(true);
+    try {
+      const message = await decodeSteganography(fileToDecode);
+      setCyberDecodedMessage(message);
+      showToast('Message decoded successfully.', 'success');
+    } catch (err) {
+      showToast(`Decoding failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, processedBlob, showToast]);
+
+  const handleCyberELA = useCallback(async () => {
+    if (!originalFile) return;
+    setIsProcessing(true);
+    try {
+      const elaDataUrl = await generateErrorLevelAnalysis(originalFile);
+      const res = await fetch(elaDataUrl);
+      const blob = await res.blob();
+      await updateProcessedResult(blob, 'cyber_ela');
+      showToast('ELA generated.', 'success');
+    } catch (err) {
+      showToast(`ELA failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, updateProcessedResult, showToast]);
+
+  const handleCyberDeepScrub = useCallback(async () => {
+    if (!originalFile) return;
+    setIsProcessing(true);
+    try {
+      const blob = await deepScrub(originalFile);
+      await updateProcessedResult(blob, 'cyber_scrub');
+      showToast('Deep scrub completed.', 'success');
+    } catch (err) {
+      showToast(`Deep scrub failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, updateProcessedResult, showToast]);
+
+  // Draw handlers
+  const handleDrawActionComplete = useCallback((action: AnnotationAction) => {
+    setDrawActions(prev => [...prev, action]);
+  }, []);
+
+  const handleDrawUndo = useCallback(() => {
+    setDrawActions(prev => prev.slice(0, -1));
+  }, []);
+
+  const handleDrawClear = useCallback(() => {
+    setDrawActions([]);
+    if (originalFile && processedSourceTool === 'draw') {
+      // Revert to original visually
+      fileToDataUrl(originalFile).then(url => {
+        setProcessedBlob(null);
+        setProcessedDataUrl(url);
+        setProcessedInfo(originalInfo || null);
+        setProcessedSourceTool(null);
+      });
+    }
+  }, [originalFile, processedSourceTool, originalInfo]);
+
+  const handleDrawApply = useCallback(async () => {
+    if (!originalFile) return;
+    setIsProcessing(true);
+    try {
+      const result = await applyAnnotations(originalFile, drawActions);
+      await updateProcessedResult(result, 'draw');
+      showToast('Annotations applied!', 'success');
+    } catch (err) {
+      showToast(`Failed to apply annotations: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, drawActions, updateProcessedResult, showToast]);
+
+  // Selection Handlers
+  const handleRemoveBackgroundAI = useCallback(async () => {
+    if (!originalFile) return;
+    setIsProcessing(true);
+    setAiProgress(0);
+    setAiStatus('Starting...');
+    try {
+      const result = await removeBackgroundAI(originalFile, (progress, status) => {
+        setAiProgress(progress);
+        setAiStatus(status);
+      });
+      await updateProcessedResult(result, 'select');
+      showToast('Background removed via AI!', 'success');
+    } catch (err) {
+      showToast(`AI Removal failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+      setAiStatus('');
+      setAiProgress(0);
+    }
+  }, [originalFile, updateProcessedResult, showToast]);
+
+  const handleMagicWandSelection = useCallback(async (pt: Point) => {
+    // If we have a processed blob, we should operate on that, otherwise operate on original
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
+    
+    setIsProcessing(true);
+    try {
+      const result = await magicWandSelection(targetFile, pt, magicWandTolerance);
+      await updateProcessedResult(result, 'select');
+      showToast('Magic wand applied.', 'success');
+    } catch (err) {
+      showToast(`Magic wand failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+      setMagicWandModeActive(false); // Turn off after single click? Optional. Let's keep it on for multi clicks.
+    }
+  }, [originalFile, processedBlob, magicWandTolerance, updateProcessedResult, showToast]);
+
+  // Watermark Handler
+  const handleWatermarkApply = useCallback(async () => {
+    // If we have a processed blob, we can operate on that, otherwise operate on original
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
+
+    setIsProcessing(true);
+    try {
+      const result = await applyWatermark(targetFile, watermarkOptions);
+      await updateProcessedResult(result, 'water');
+      showToast('Watermark applied.', 'success');
+    } catch (err) {
+      showToast(`Watermark failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, processedBlob, watermarkOptions, updateProcessedResult, showToast]);
+
+  // Filter Handler
+  const handleFilterApply = useCallback(async (filter: FilterType) => {
+    setActiveFilter(filter);
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
+
+    if (filter === 'none') {
+      // Just revert if it's the last tool used
+      if (processedSourceTool === 'filter') {
+        setProcessedBlob(null);
+        fileToDataUrl(originalFile).then(setProcessedDataUrl);
+        setProcessedInfo(originalInfo || null);
+        setProcessedSourceTool(null);
+      }
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const result = await applyColorFilter(targetFile, filter);
+      await updateProcessedResult(result, 'filter');
+    } catch (err) {
+      showToast(`Filter failed: ${(err as Error).message}`, 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [originalFile, processedBlob, originalInfo, processedSourceTool, updateProcessedResult, showToast]);
+
   // Download handler
   const handleDownload = useCallback(() => {
     if (!processedBlob || !originalFile) return;
@@ -376,9 +632,14 @@ function App() {
     setProcessedInfo(null);
     setMetadata(null);
     setOcrResult(null);
+    setCyberDecodedMessage(null);
+    setCyberScanReport(null);
     setAdjustments(getDefaultAdjustments());
     setProcessedSourceTool(null);
     setCompressOptions(null);
+    setDrawActions([]);
+    setActiveFilter('none');
+    setHistogramData(null);
   }, []);
 
   // Render side panel based on active tab
@@ -439,6 +700,67 @@ function App() {
             onExtract={handleOcrExtract}
           />
         );
+      case 'cyber':
+        return (
+          <CyberPanel
+            originalFile={originalFile}
+            onEncode={handleCyberEncode}
+            onDecode={handleCyberDecode}
+            onScan={handleCyberScan}
+            onAnalyzeELA={handleCyberELA}
+            onDeepScrub={handleCyberDeepScrub}
+            decodedMessage={cyberDecodedMessage}
+            scanReport={cyberScanReport}
+            isProcessing={isProcessing}
+          />
+        );
+      case 'draw':
+        return (
+          <DrawPanel
+            currentTool={drawTool}
+            setCurrentTool={setDrawTool}
+            color={drawColor}
+            setColor={setDrawColor}
+            brushSize={drawBrushSize}
+            setBrushSize={setDrawBrushSize}
+            onUndo={handleDrawUndo}
+            onClear={handleDrawClear}
+            onApply={handleDrawApply}
+            hasActions={drawActions.length > 0}
+            isProcessing={isProcessing}
+          />
+        );
+      case 'select':
+        return (
+          <SelectionPanel
+            onRemoveBackgroundAI={handleRemoveBackgroundAI}
+            magicWandTolerance={magicWandTolerance}
+            setMagicWandTolerance={setMagicWandTolerance}
+            magicWandModeActive={magicWandModeActive}
+            setMagicWandModeActive={setMagicWandModeActive}
+            isProcessing={isProcessing}
+            aiProgress={aiProgress}
+            aiStatus={aiStatus}
+          />
+        );
+      case 'water':
+        return (
+          <WatermarkPanel
+            options={watermarkOptions}
+            onChange={setWatermarkOptions}
+            onApply={handleWatermarkApply}
+            isProcessing={isProcessing}
+          />
+        );
+      case 'filter':
+        return (
+          <FilterPanel
+            histogramData={histogramData}
+            activeFilter={activeFilter}
+            onApplyFilter={handleFilterApply}
+            isProcessing={isProcessing}
+          />
+        );
       default:
         return null;
     }
@@ -474,6 +796,26 @@ function App() {
                   activeTab === 'adjust' && processedSourceTool !== 'adjust'
                     ? liveFilterString
                     : undefined
+                }
+                overlay={
+                  activeTab === 'draw' && originalInfo ? (
+                    <DrawOverlay
+                      width={originalInfo.width}
+                      height={originalInfo.height}
+                      currentTool={drawTool}
+                      color={drawColor}
+                      brushSize={drawBrushSize}
+                      actions={drawActions}
+                      onActionComplete={handleDrawActionComplete}
+                    />
+                  ) : activeTab === 'select' && magicWandModeActive && originalInfo ? (
+                    <SelectionOverlay
+                      width={originalInfo.width}
+                      height={originalInfo.height}
+                      active={magicWandModeActive}
+                      onPointSelected={handleMagicWandSelection}
+                    />
+                  ) : undefined
                 }
               />
               {processedBlob && originalFile && (

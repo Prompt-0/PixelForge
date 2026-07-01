@@ -1,4 +1,4 @@
-import { createImageElement, fileToDataUrl, dataUrlToBlob } from './helpers';
+import { createImageElement, fileToDataUrl } from './helpers';
 
 export interface ScanReport {
   isSafe: boolean;

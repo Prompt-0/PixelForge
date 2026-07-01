@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, Unlock, ShieldAlert, ShieldCheck, Activity, Search, Eraser } from 'lucide-react';
 import './CyberPanel.css';
-import { ScanReport } from '../../utils/cyberSecurity';
+import { type ScanReport } from '../../utils/cyberSecurity';
 
 interface CyberPanelProps {
   originalFile: File | null;

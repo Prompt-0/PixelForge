@@ -15,6 +15,7 @@ interface ImagePreviewProps {
   originalInfo: ImageInfo;
   processedInfo?: ImageInfo;
   liveFilter?: string;
+  overlay?: React.ReactNode;
 }
 
 function formatFileSize(bytes: number): string {
@@ -29,6 +30,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   originalInfo,
   processedInfo,
   liveFilter,
+  overlay,
 }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [zoom, setZoom] = useState(1);
@@ -96,6 +98,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
               className="image-preview__image"
               style={{ transform: `scale(${zoom})`, filter: liveFilter || 'none' }}
             />
+            {overlay && <div className="image-preview__overlay-container" style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}>{overlay}</div>}
           </div>
         )}
 

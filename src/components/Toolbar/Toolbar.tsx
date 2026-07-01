@@ -1,7 +1,6 @@
-import React from 'react';
 import { 
   Crop, Minimize2, RefreshCw, Sliders, 
-  FileText, ScanText, Layers, Image as ImageIcon, Trash2 
+  FileText, ScanText, Layers, Image as ImageIcon, Trash2, Shield, PenTool, Wand2, Stamp, Palette
 } from 'lucide-react';
 import './Toolbar.css';
 
@@ -19,8 +18,13 @@ const TABS = [
   { id: 'compress', label: 'Compress', icon: Minimize2 },
   { id: 'convert', label: 'Convert', icon: RefreshCw },
   { id: 'adjust', label: 'Adjust', icon: Sliders },
+  { id: 'select', label: 'Select', icon: Wand2 },
   { id: 'metadata', label: 'Metadata', icon: FileText },
   { id: 'ocr', label: 'OCR', icon: ScanText },
+  { id: 'draw', label: 'Draw', icon: PenTool },
+  { id: 'water', label: 'Watermark', icon: Stamp },
+  { id: 'filter', label: 'Filter', icon: Palette },
+  { id: 'cyber', label: 'Cyber', icon: Shield },
 ];
 
 const Toolbar: React.FC<ToolbarProps> = ({ 

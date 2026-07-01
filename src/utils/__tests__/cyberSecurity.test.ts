@@ -1,10 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
-  encodeSteganography,
-  decodeSteganography,
-  scanForPayloads,
-  generateErrorLevelAnalysis,
-  deepScrub
+  scanForPayloads
 } from '../cyberSecurity';
 
 // Mock helpers so we don't actually need the DOM / real File readers in node test environment

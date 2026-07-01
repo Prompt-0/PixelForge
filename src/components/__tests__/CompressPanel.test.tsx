@@ -103,4 +103,28 @@ describe('CompressPanel Component', () => {
       quality: 0.8,
     });
   });
+
+  it('triggers onChange automatically when options change if livePreviewEnabled is true', () => {
+    const onChange = vi.fn();
+    render(
+      <CompressPanel
+        originalSize={102400}
+        onCompress={vi.fn()}
+        livePreviewEnabled={true}
+        onChange={onChange}
+      />
+    );
+
+    // Initial render effect should call onChange
+    expect(onChange).toHaveBeenCalled();
+    onChange.mockClear();
+
+    // Change format to PNG
+    const pngBtn = screen.getByText('PNG');
+    fireEvent.click(pngBtn);
+
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({
+      format: 'image/png'
+    }));
+  });
 });

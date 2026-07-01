@@ -1,0 +1,49 @@
+.export-panel {
+  position: absolute;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(30, 30, 40, 0.85);
+  min-width: 450px;
+  z-index: var(--z-sticky);
+  animation: fadeInUp var(--transition-normal) ease;
+}
+
+.export-panel__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.export-info-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.export-dim, .export-size {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-family: var(--font-mono);
+}
+
+.export-savings {
+  font-size: 0.75rem;
+  color: var(--success);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.export-btn {
+  padding: var(--space-2) var(--space-5);
+  font-weight: 600;
+  box-shadow: var(--shadow-glow);
+}

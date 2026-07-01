@@ -1,0 +1,23 @@
+.convert-panel {
+  padding: var(--space-4);
+}
+
+.current-format-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding: var(--space-3);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.current-format-badge .label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.current-format-badge .value {
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+}

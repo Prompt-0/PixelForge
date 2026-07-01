@@ -48,8 +48,8 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
             <Pen size={18} />
           </button>
           <button 
-            className={`icon-btn ${currentTool === 'rect' ? 'active' : ''}`}
-            onClick={() => setCurrentTool('rect')}
+            className={`icon-btn ${currentTool === 'rectangle' ? 'active' : ''}`}
+            onClick={() => setCurrentTool('rectangle')}
             title="Rectangle"
           >
             <Square size={18} />

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { applyAnnotations, type DrawAction } from '../annotationEngine';
+import { applyAnnotations, type AnnotationAction } from '../annotationEngine';
 
 vi.mock('../helpers', () => ({
   createImageElement: vi.fn().mockResolvedValue({ width: 100, height: 100 }),
@@ -31,7 +31,7 @@ describe('annotationEngine', () => {
 
   it('applies freehand annotations correctly', async () => {
     const file = new File(['mock'], 'test.png', { type: 'image/png' });
-    const actions: DrawAction[] = [{
+    const actions: AnnotationAction[] = [{
       id: '1',
       tool: 'freehand',
       color: '#ff0000',
@@ -45,10 +45,10 @@ describe('annotationEngine', () => {
   
   it('applies shapes correctly', async () => {
     const file = new File(['mock'], 'test.png', { type: 'image/png' });
-    const actions: DrawAction[] = [
+    const actions: AnnotationAction[] = [
       {
         id: '2',
-        tool: 'rect',
+        tool: 'rectangle',
         color: '#00ff00',
         size: 2,
         points: [],

@@ -60,7 +60,7 @@ const DrawOverlay: React.FC<DrawOverlayProps> = ({
           }
           ctx.stroke();
         }
-      } else if (action.tool === 'rect') {
+      } else if (action.tool === 'rectangle') {
         ctx.strokeStyle = action.color;
         ctx.lineWidth = action.size;
         if (action.points.length >= 2) {

@@ -84,3 +84,31 @@ Integrity mode: development
 - [ ] In single-image mode, the control panels take up at least 40-50% of the screen width on desktop layouts.
 - [ ] The home screen upload box is visually bounded by a `max-width`.
 
+
+## 2026-07-02T04:42:26Z
+
+# Teamwork Project Prompt
+
+Perform a comprehensive audit of the Image Manipulator project to identify and fix any functional bugs, UI glitches, or edge cases. The goal is to ensure all recently added features (Draw, Select, Watermark, Filter, Cyber) and core functionalities work flawlessly.
+
+Working directory: /home/ritesh/Projects/Active/Image_Manipulator
+Integrity mode: benchmark
+
+## Requirements
+
+### R1. Deep Codebase Audit and Remediation
+Perform a manual and systematic audit of the recent "Mega Expansion" features (Draw, Select, Watermark, Filter, Cyber). Identify and fix any functional bugs, unhandled edge cases, or UI glitches. 
+
+### R2. Expand Unit Testing
+Expand the existing Vitest unit test suite to improve code coverage, specifically targeting edge cases and complex interactions within the new utility engines.
+
+### R3. Implement End-to-End (E2E) Testing
+Introduce and configure an End-to-End testing framework (e.g., Playwright) to systematically test browser UI interactions and visual workflows across the various image manipulation panels.
+
+## Acceptance Criteria
+
+### Comprehensive Verification
+- [ ] A systematic review of the codebase is documented, and all identified functional bugs or UI issues are fixed.
+- [ ] The Vitest test suite runs successfully with no errors, demonstrating increased test coverage for edge cases.
+- [ ] A modern E2E testing framework (e.g. Playwright) is successfully installed and configured.
+- [ ] At least one core E2E test suite is implemented covering a critical UI flow, and it passes successfully on the local development server.

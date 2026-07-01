@@ -595,7 +595,7 @@ function App() {
       // Just revert if it's the last tool used
       if (processedSourceTool === 'filter') {
         setProcessedBlob(null);
-        fileToDataUrl(originalFile).then(setProcessedDataUrl);
+        fileToDataUrl(originalFile!).then(setProcessedDataUrl);
         setProcessedInfo(originalInfo || null);
         setProcessedSourceTool(null);
       }

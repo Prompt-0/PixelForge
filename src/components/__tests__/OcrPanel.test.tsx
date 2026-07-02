@@ -56,13 +56,13 @@ describe('OcrPanel Component', () => {
       />
     );
 
-    const select = screen.getByRole('combobox');
+    const select = screen.getAllByRole('combobox')[0]; // Language select
     await user.selectOptions(select, 'spa'); // Select Spanish
 
     const extractBtn = screen.getByRole('button', { name: /Extract Text/i });
     fireEvent.click(extractBtn);
 
-    expect(onExtract).toHaveBeenCalledWith('spa');
+    expect(onExtract).toHaveBeenCalledWith('spa', 'standard');
   });
 
   it('triggers onRegionSelect when Select Region is clicked', () => {
@@ -95,7 +95,7 @@ describe('OcrPanel Component', () => {
 
     expect(screen.getByText('Extracting…')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Extracting…/i })).toBeDisabled();
-    expect(screen.getByRole('combobox')).toBeDisabled();
+    screen.getAllByRole('combobox').forEach(box => expect(box).toBeDisabled());
   });
 
   it('renders OCR results correctly', () => {

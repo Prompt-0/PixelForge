@@ -5,6 +5,11 @@
  */
 
 import { createWorker, type Worker as TesseractWorker } from 'tesseract.js';
+import { env, pipeline, RawImage } from '@xenova/transformers';
+
+// Configure transformers for browser
+env.allowLocalModels = false;
+env.useBrowserCache = true;
 
 /** Result from OCR text recognition. */
 export interface OcrResult {
@@ -145,6 +150,63 @@ export async function recognizeText(
   } catch (error) {
     throw new Error(
       `OCR recognition failed: ${error instanceof Error ? error.message : String(error)}`
+    );
+  }
+}
+
+// AI pipeline instance
+let aiPipeline: any = null;
+
+/**
+ * Recognizes text using a local AI model via Transformers.js
+ * 
+ * @param imageSource - The image as a data URL string or Blob
+ * @param onProgress - Optional callback for download progress
+ * @returns A promise resolving to the OCR result
+ */
+export async function recognizeTextAI(
+  imageSource: string | Blob,
+  onProgress?: (progress: number, status: string) => void
+): Promise<OcrResult> {
+  try {
+    if (!aiPipeline) {
+      onProgress?.(0, 'Initializing AI Model (Xenova/donut-base-finetuned-cord-v2)...');
+      aiPipeline = await pipeline('image-to-text', 'Xenova/donut-base-finetuned-cord-v2', {
+        progress_callback: (p: any) => {
+          if (p.status === 'downloading' && p.progress) {
+            onProgress?.(p.progress, `Downloading model: ${Math.round(p.progress)}%`);
+          } else if (p.status === 'ready') {
+            onProgress?.(100, 'Model loaded successfully.');
+          }
+        }
+      });
+    }
+
+    onProgress?.(100, 'Extracting text...');
+    
+    // Load image
+    let url = typeof imageSource === 'string' ? imageSource : URL.createObjectURL(imageSource);
+    const rawImage = await RawImage.fromURL(url);
+    if (typeof imageSource !== 'string' || url.startsWith('blob:')) {
+      URL.revokeObjectURL(url);
+    }
+
+    // Run inference
+    const output = await aiPipeline(rawImage);
+    
+    // Donut typically outputs a generated_text string or JSON-like structure
+    const extractedText = Array.isArray(output) && output.length > 0 
+      ? output[0].generated_text || '' 
+      : (output.generated_text || '');
+
+    return {
+      text: extractedText,
+      confidence: 90, // TrOCR/Donut doesn't easily expose token confidences in this pipeline out of the box
+      blocks: [], // Region blocks are complex to extract from standard image-to-text
+    };
+  } catch (error) {
+    throw new Error(
+      `AI OCR recognition failed: ${error instanceof Error ? error.message : String(error)}`
     );
   }
 }

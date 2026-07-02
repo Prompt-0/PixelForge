@@ -162,6 +162,11 @@
   min-height: 80px;
 }
 
+.steg-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 1;
+}
+
 .steg-input:focus {
   outline: none;
   border-color: var(--accent-primary);

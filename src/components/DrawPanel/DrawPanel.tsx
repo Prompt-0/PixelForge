@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pen, Square, Circle, Eraser, RotateCcw, Trash2 } from 'lucide-react';
 import { type AnnotationTool } from '../../utils/annotationEngine';
+import Slider from '../Slider/Slider';
 import './DrawPanel.css';
 
 interface DrawPanelProps {
@@ -44,6 +45,8 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
             className={`icon-btn ${currentTool === 'freehand' ? 'active' : ''}`}
             onClick={() => setCurrentTool('freehand')}
             title="Freehand Pen"
+            aria-label="Freehand Pen"
+            aria-pressed={currentTool === 'freehand'}
           >
             <Pen size={18} />
           </button>
@@ -51,6 +54,8 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
             className={`icon-btn ${currentTool === 'rectangle' ? 'active' : ''}`}
             onClick={() => setCurrentTool('rectangle')}
             title="Rectangle"
+            aria-label="Rectangle"
+            aria-pressed={currentTool === 'rectangle'}
           >
             <Square size={18} />
           </button>
@@ -58,6 +63,8 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
             className={`icon-btn ${currentTool === 'ellipse' ? 'active' : ''}`}
             onClick={() => setCurrentTool('ellipse')}
             title="Ellipse"
+            aria-label="Ellipse"
+            aria-pressed={currentTool === 'ellipse'}
           >
             <Circle size={18} />
           </button>
@@ -65,6 +72,8 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
             className={`icon-btn ${currentTool === 'blur' ? 'active' : ''}`}
             onClick={() => setCurrentTool('blur')}
             title="Redaction Blur"
+            aria-label="Redaction Blur"
+            aria-pressed={currentTool === 'blur'}
           >
             <Eraser size={18} />
           </button>
@@ -80,6 +89,7 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
               value={color}
               onChange={(e) => setColor(e.target.value)}
               className="color-input"
+              aria-label="Brush Color"
             />
             <span className="color-hex">{color.toUpperCase()}</span>
           </div>
@@ -88,13 +98,12 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
 
       <div className="tool-group">
         <label>Brush Size: {brushSize}px</label>
-        <input 
-          type="range" 
-          min="1" 
-          max="50" 
+        <Slider 
+          min={1} 
+          max={50} 
           value={brushSize}
-          onChange={(e) => setBrushSize(Number(e.target.value))}
-          className="slider"
+          onChange={(val) => setBrushSize(val)}
+          ariaLabel="Brush Size"
         />
       </div>
 
@@ -115,13 +124,15 @@ const DrawPanel: React.FC<DrawPanelProps> = ({
         </button>
       </div>
 
-      <button 
-        className="btn-primary apply-btn"
-        onClick={onApply}
-        disabled={!hasActions || isProcessing}
-      >
-        {isProcessing ? 'Applying...' : 'Apply Drawing'}
-      </button>
+      <div className="tool-group" style={{ marginTop: 'var(--space-4)' }}>
+        <button 
+          className="btn btn-primary"
+          onClick={onApply}
+          disabled={!hasActions || isProcessing}
+        >
+          {isProcessing ? 'Processing...' : 'Apply Drawing'}
+        </button>
+      </div>
     </div>
   );
 };

@@ -16,6 +16,7 @@ interface ImagePreviewProps {
   processedInfo?: ImageInfo;
   liveFilter?: string;
   overlay?: React.ReactNode;
+  instructionText?: string;
 }
 
 function formatFileSize(bytes: number): string {
@@ -31,6 +32,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   processedInfo,
   liveFilter,
   overlay,
+  instructionText,
 }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [zoom, setZoom] = useState(1);
@@ -93,7 +95,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     setZoom(1);
   }, []);
 
-  const hasComparison = !!processedSrc;
+  const hasComparison = !!processedSrc || (!!liveFilter && liveFilter !== 'none');
 
   return (
     <div className="image-preview" ref={containerRef}>
@@ -131,7 +133,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
               style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
             >
               <img
-                src={processedSrc}
+                src={processedSrc || originalSrc}
                 alt="Processed"
                 className="image-preview__image"
                 style={{ transform: `scale(${zoom})`, filter: liveFilter || 'none' }}
@@ -157,6 +159,12 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
           </>
         )}
       </div>
+
+      {instructionText && (
+        <div className="image-preview__instruction-overlay">
+          <p>{instructionText}</p>
+        </div>
+      )}
 
       {/* Info badges */}
       <div className="image-preview__badge image-preview__badge--original">
@@ -187,43 +195,48 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
         </div>
       )}
 
-      {/* Zoom controls */}
-      <div className="image-preview__zoom-controls">
-        <button
-          className="image-preview__zoom-btn"
-          onClick={handleZoomFit}
-          title="Fit to view"
-          aria-label="Fit to view"
-        >
-          <Maximize size={16} />
-        </button>
-        <button
-          className="image-preview__zoom-btn"
-          onClick={handleZoom100}
-          title="Zoom to 100%"
-          aria-label="Zoom to 100%"
-        >
-          <Minimize2 size={16} />
-        </button>
-        <button
-          className="image-preview__zoom-btn"
-          onClick={handleZoomOut}
-          title="Zoom out"
-          aria-label="Zoom out"
-        >
-          <ZoomOut size={16} />
-        </button>
-        <button
-          className="image-preview__zoom-btn"
-          onClick={handleZoomIn}
-          title="Zoom in"
-          aria-label="Zoom in"
-        >
-          <ZoomIn size={16} />
-        </button>
-        <span className="image-preview__zoom-level" aria-label={`Current zoom level is ${Math.round(zoom * 100)} percent`}>
-          {Math.round(zoom * 100)}%
-        </span>
+      {/* Bottom Status Bar */}
+      <div className="image-preview__status-bar">
+        <div className="image-preview__status-left">
+          {hasComparison && processedInfo ? 'Comparison Mode' : 'View Mode'}
+        </div>
+        <div className="image-preview__zoom-controls">
+          <button
+            className="image-preview__zoom-btn"
+            onClick={handleZoomFit}
+            title="Fit to view"
+            aria-label="Fit to view"
+          >
+            <Maximize size={16} />
+          </button>
+          <button
+            className="image-preview__zoom-btn"
+            onClick={handleZoom100}
+            title="Zoom to 100%"
+            aria-label="Zoom to 100%"
+          >
+            <Minimize2 size={16} />
+          </button>
+          <button
+            className="image-preview__zoom-btn"
+            onClick={handleZoomOut}
+            title="Zoom out"
+            aria-label="Zoom out"
+          >
+            <ZoomOut size={16} />
+          </button>
+          <button
+            className="image-preview__zoom-btn"
+            onClick={handleZoomIn}
+            title="Zoom in"
+            aria-label="Zoom in"
+          >
+            <ZoomIn size={16} />
+          </button>
+          <span className="image-preview__zoom-level" aria-label={`Current zoom level is ${Math.round(zoom * 100)} percent`}>
+            {Math.round(zoom * 100)}%
+          </span>
+        </div>
       </div>
     </div>
   );

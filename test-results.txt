@@ -1,0 +1,635 @@
+
+> image-manipulator@0.0.0 test
+> vitest --run
+
+
+ RUN  v4.1.9 /home/ritesh/Projects/Active/Image_Manipulator
+
+ ✓ src/components/__tests__/ResizePanel.test.tsx (8 tests) 1141ms
+     ✓ updates width and height when a preset is chosen  444ms
+ ✓ src/components/__tests__/MetadataEditor.test.tsx (6 tests) 1210ms
+     ✓ filters metadata fields based on search query  438ms
+     ✓ manages checkbox selections, select all, deselect all, and strip  310ms
+ ✓ src/components/__tests__/OcrPanel.test.tsx (7 tests) 1132ms
+     ✓ renders control elements when image source is provided  394ms
+ ✓ src/components/__tests__/AdjustmentPanel.test.tsx (5 tests) 1351ms
+     ✓ renders all sections and sliders with default values  684ms
+Not implemented: navigation to another Document
+ ❯ e2e/app.spec.ts (0 test)
+ ✓ src/components/__tests__/BatchProcessor.test.tsx (9 tests) 2162ms
+     ✓ populates queue and shows Settings workspace when files are selected  520ms
+     ✓ supports selecting operation and renders correct settings options  440ms
+ ❯ src/components/__tests__/App.test.tsx (2 tests | 2 failed) 1482ms
+     × renders UploadZone initially 279ms
+     × renders workspace with Live Preview checkbox when a file is loaded 1194ms
+stderr | src/components/__tests__/ImagePreview.test.tsx > ImagePreview Component > handles slider drag interaction
+An update to ImagePreview inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to ImagePreview inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/components/__tests__/ConvertPanel.test.tsx (4 tests) 690ms
+     ✓ renders initial state correctly with current format  440ms
+ ✓ src/components/__tests__/ImagePreview.test.tsx (4 tests) 654ms
+     ✓ renders comparison mode correctly  364ms
+ ✓ src/components/__tests__/CompressPanel.test.tsx (6 tests) 969ms
+     ✓ renders initial state correctly  620ms
+ ✓ src/components/__tests__/UploadZone.test.tsx (5 tests) 851ms
+     ✓ renders correctly with supported formats  511ms
+ ✓ src/components/__tests__/dummy.test.tsx (2 tests) 112ms
+ ✓ src/components/__tests__/ExportPanel.test.tsx (4 tests) 770ms
+     ✓ renders filename, dimension, size and optimized badge correctly  553ms
+ ✓ src/components/__tests__/Toolbar.test.tsx (5 tests) 1272ms
+     ✓ disables tabs when hasImage is false or mode is batch  654ms
+ ✓ src/utils/__tests__/filterEngine.test.ts (3 tests) 38ms
+ ✓ src/utils/__tests__/cyberSecurity.test.ts (5 tests) 23ms
+ ✓ src/utils/__tests__/watermarkEngine.test.ts (2 tests) 34ms
+ ✓ src/utils/filterEngine.test.ts (3 tests) 52ms
+ ✓ src/utils/selectionEngine.test.ts (1 test) 52ms
+ ✓ src/utils/__tests__/annotationEngine.test.ts (2 tests) 23ms
+ ✓ src/utils/watermarkEngine.test.ts (2 tests) 17ms
+ ✓ src/utils/helpers.test.ts (3 tests) 12ms
+ ✓ src/utils/__tests__/selectionEngine.test.ts (1 test) 12ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  e2e/app.spec.ts [ e2e/app.spec.ts ]
+Error: Playwright Test did not expect test.describe() to be called here.
+Most common reasons include:
+- You are calling test.describe() in a configuration file.
+- You are calling test.describe() in a file that is imported by the configuration file.
+- You have two different versions of @playwright/test. This usually happens
+  when one of the dependencies in your package.json depends on @playwright/test.
+- You are calling test.describe() from an async test.describe() block. Only sync ones are supported.
+ ❯ _TestTypeImpl._currentSuite node_modules/playwright/lib/common/index.js:2257:13
+ ❯ _TestTypeImpl._describe node_modules/playwright/lib/common/index.js:2298:24
+ ❯ Function.describe node_modules/playwright/lib/common/index.js:1220:12
+ ❯ e2e/app.spec.ts:6:6
+      4| import * as os from 'os';
+      5|
+      6| test.describe('PixelForge End-to-End Tests', () => {
+       |      ^
+      7|   let testImagePath: string;
+      8|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/__tests__/App.test.tsx > App Component Layout and Live Preview > renders UploadZone initially
+TestingLibraryElementError: Found multiple elements with the text: /Drag & drop/i
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<h3[39m
+  [33mclass[39m=[32m"upload-zone__title"[39m
+[36m>[39m
+  [0mDrag & drop your images here[0m
+[36m</h3>[39m
+
+Ignored nodes: comments, script, style
+[36m<h3[39m
+  [33mclass[39m=[32m"upload-zone__title"[39m
+[36m>[39m
+  [0mDrag & drop your images here[0m
+[36m</h3>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"toolbar glass-panel-solid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"toolbar__brand"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"brand-logo"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-image text-accent"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mry[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"3"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"9"[39m
+                [33mcy[39m=[32m"9"[39m
+                [33mr[39m=[32m"2"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"brand-name"[39m
+          [36m>[39m
+            [0mPixelForge[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<nav[39m
+          [33mclass[39m=[32m"toolbar__nav"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"toolbar-group"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"toolbar-group-title"[39m
+            [36m>[39m
+              [0mTransform[0m
+            [36m</span>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"toolbar-group-tabs"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"tab-btn "[39m
+                [33mdata-testid[39m=[32m"tab-resize"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtitle[39m=[32m"Resize"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-crop"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M6 2v14a2 2 0 0 0 2 2h14"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M18 22V8a2 2 0 0 0-2-2H2"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0mResize[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"tab-btn "[39m
+                [33mdata-testid[39m=[32m"tab-compress"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtitle[39m=[32m"Compress"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-minimize2 lucide-minimize-2"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m14 10 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M20 10h-6V4"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m3 21 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M4 14h6v6"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0mCompress[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"tab-btn "[39m
+                [33mdata-testid[39m=[32m"tab-convert"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtitle[39m=[32m"Convert"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-refresh-cw"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M21 3v5h-5"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M8 16H3v5"[39m
+       ...
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/__tests__/App.test.tsx:66:19
+     64|   it('renders UploadZone initially', () => {
+     65|     render(<App />);
+     66|     expect(screen.getByText(/Drag & drop/i)).toBeInTheDocument();
+       |                   ^
+     67|   });
+     68|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/components/__tests__/App.test.tsx > App Component Layout and Live Preview > renders workspace with Live Preview checkbox when a file is loaded
+TestingLibraryElementError: Unable to find a label with the text of: Live Preview
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"app"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"toolbar glass-panel-solid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"toolbar__brand"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"brand-logo"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"lucide lucide-image text-accent"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"2"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+              [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+            [36m>[39m
+              [36m<rect[39m
+                [33mheight[39m=[32m"18"[39m
+                [33mrx[39m=[32m"2"[39m
+                [33mry[39m=[32m"2"[39m
+                [33mwidth[39m=[32m"18"[39m
+                [33mx[39m=[32m"3"[39m
+                [33my[39m=[32m"3"[39m
+              [36m/>[39m
+              [36m<circle[39m
+                [33mcx[39m=[32m"9"[39m
+                [33mcy[39m=[32m"9"[39m
+                [33mr[39m=[32m"2"[39m
+              [36m/>[39m
+              [36m<path[39m
+                [33md[39m=[32m"m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"brand-name"[39m
+          [36m>[39m
+            [0mPixelForge[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<nav[39m
+          [33mclass[39m=[32m"toolbar__nav"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"toolbar-group"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"toolbar-group-title"[39m
+            [36m>[39m
+              [0mTransform[0m
+            [36m</span>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"toolbar-group-tabs"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"tab-btn "[39m
+                [33mdata-testid[39m=[32m"tab-resize"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtitle[39m=[32m"Resize"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-crop"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M6 2v14a2 2 0 0 0 2 2h14"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M18 22V8a2 2 0 0 0-2-2H2"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0mResize[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"tab-btn "[39m
+                [33mdata-testid[39m=[32m"tab-compress"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtitle[39m=[32m"Compress"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-minimize2 lucide-minimize-2"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m14 10 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M20 10h-6V4"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"m3 21 7-7"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M4 14h6v6"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0mCompress[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"tab-btn "[39m
+                [33mdata-testid[39m=[32m"tab-convert"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtitle[39m=[32m"Convert"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"lucide lucide-refresh-cw"[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mheight[39m=[32m"16"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"2"[39m
+                  [33mviewBox[39m=[32m"0 0 24 24"[39m
+                  [33mwidth[39m=[32m"16"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M21 3v5h-5"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M8 16H3v5"[39m
+       ...
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"app"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"toolbar glass-panel-solid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"toolbar__brand"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"brand-logo"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-image text-accent"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"20"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"20"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<rect[39m
+                  [33mheight[39m=[32m"18"[39m
+                  [33mrx[39m=[32m"2"[39m
+                  [33mry[39m=[32m"2"[39m
+                  [33mwidth[39m=[32m"18"[39m
+                  [33mx[39m=[32m"3"[39m
+                  [33my[39m=[32m"3"[39m
+                [36m/>[39m
+                [36m<circle[39m
+                  [33mcx[39m=[32m"9"[39m
+                  [33mcy[39m=[32m"9"[39m
+                  [33mr[39m=[32m"2"[39m
+                [36m/>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"brand-name"[39m
+            [36m>[39m
+              [0mPixelForge[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<nav[39m
+            [33mclass[39m=[32m"toolbar__nav"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"toolbar-group"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"toolbar-group-title"[39m
+              [36m>[39m
+                [0mTransform[0m
+              [36m</span>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"toolbar-group-tabs"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"tab-btn "[39m
+                  [33mdata-testid[39m=[32m"tab-resize"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtitle[39m=[32m"Resize"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"lucide lucide-crop"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"16"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"16"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M6 2v14a2 2 0 0 0 2 2h14"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M18 22V8a2 2 0 0 0-2-2H2"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span>[39m
+                    [0mResize[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"tab-btn "[39m
+                  [33mdata-testid[39m=[32m"tab-compress"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtitle[39m=[32m"Compress"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"lucide lucide-minimize2 lucide-minimize-2"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"16"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"16"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"m14 10 7-7"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M20 10h-6V4"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"m3 21 7-7"[39m
+                    [36m/>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M4 14h6v6"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span>[39m
+                    [0mCompress[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"tab-btn "[39m
+                  [33mdata-testid[39m=[32m"tab-convert"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtitle[39m=[32m"Convert"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"lucide lucide-refresh-cw"[39m
+                    [33mfill[39m=[32m"none"[39m
+                    [33mheight[39m=[32m"16"[39m
+                    [33mstroke[39m=[32m"currentColor"[39m
+                    [33mstroke-linecap[39m=[32m"round"[39m
+                    [33mstroke-linejoin[39m=[32m"round"[39m
+                    [33mstroke-width[39m=[32m"2"[39m
+                    [33mviewBox[39m=[32m"0 0 24 24"[39m
+                    [33mwidth[39m=[32m"16"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<path[39m
+                      [33md[39m=[32m"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"[39m
+                    [36m/>[39m
+                    [36m<path[...
+ ❯ Proxy.waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/components/__tests__/App.test.tsx:85:11
+     83|
+     84|     // Wait for App to render workspace (live preview checkbox)
+     85|     await waitFor(() => {
+       |           ^
+     86|       const livePreviewCheckbox = screen.getByLabelText('Live Preview'…
+     87|       expect(livePreviewCheckbox).toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 21 passed (23)
+      Tests  2 failed | 87 passed (89)
+   Start at  13:06:21
+   Duration  15.95s (transform 2.60s, setup 3.98s, import 10.32s, tests 14.06s, environment 54.86s)
+

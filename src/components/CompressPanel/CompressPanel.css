@@ -1,5 +1,7 @@
-.compress-panel {
-  padding: var(--space-4);
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .panel__header {

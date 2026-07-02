@@ -104,6 +104,7 @@ const ResizePanel: React.FC<ResizePanelProps> = ({
               className="resize-panel__input"
               value={width}
               min={1}
+              aria-label="Width in pixels"
               onChange={(e) => handleWidthChange(parseInt(e.target.value, 10) || 0)}
             />
           </div>
@@ -111,6 +112,8 @@ const ResizePanel: React.FC<ResizePanelProps> = ({
             className={`resize-panel__lock-btn ${lockAspect ? 'resize-panel__lock-btn--active' : ''}`}
             onClick={() => setLockAspect(!lockAspect)}
             title={lockAspect ? 'Unlock aspect ratio' : 'Lock aspect ratio'}
+            aria-label={lockAspect ? 'Unlock aspect ratio' : 'Lock aspect ratio'}
+            aria-pressed={lockAspect}
           >
             {lockAspect ? <Link size={16} /> : <Unlink size={16} />}
           </button>
@@ -121,6 +124,7 @@ const ResizePanel: React.FC<ResizePanelProps> = ({
               className="resize-panel__input"
               value={height}
               min={1}
+              aria-label="Height in pixels"
               onChange={(e) => handleHeightChange(parseInt(e.target.value, 10) || 0)}
             />
           </div>
@@ -134,6 +138,7 @@ const ResizePanel: React.FC<ResizePanelProps> = ({
           className="resize-panel__select"
           onChange={handlePresetChange}
           defaultValue=""
+          aria-label="Resize Presets"
         >
           <option value="" disabled>
             Choose a preset…
@@ -155,6 +160,7 @@ const ResizePanel: React.FC<ResizePanelProps> = ({
               key={m.value}
               className={`resize-panel__mode-btn ${resizeMode === m.value ? 'resize-panel__mode-btn--active' : ''}`}
               onClick={() => setResizeMode(m.value)}
+              aria-pressed={resizeMode === m.value}
             >
               {m.label}
             </button>
@@ -175,6 +181,7 @@ const ResizePanel: React.FC<ResizePanelProps> = ({
             value={rotation}
             min={0}
             max={360}
+            aria-label="Rotation in degrees"
             onChange={(e) => handleRotationChange(parseInt(e.target.value, 10) || 0)}
           />
           <div className="resize-panel__rotation-presets">
@@ -183,6 +190,8 @@ const ResizePanel: React.FC<ResizePanelProps> = ({
                 key={deg}
                 className={`resize-panel__rotation-preset ${rotation === deg ? 'resize-panel__rotation-preset--active' : ''}`}
                 onClick={() => handleRotationChange(deg)}
+                aria-label={`Rotate ${deg} degrees`}
+                aria-pressed={rotation === deg}
               >
                 {deg}°
               </button>

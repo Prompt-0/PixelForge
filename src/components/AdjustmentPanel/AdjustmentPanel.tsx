@@ -157,8 +157,18 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({ adjustments, onChange
             <div
               className="adjustment-panel__section-header"
               onClick={() => toggleSection(section.id)}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isExpanded}
+              aria-controls={`adjustment-section-${section.id}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggleSection(section.id);
+                }
+              }}
             >
-              <div className="adjustment-panel__section-icon">{section.icon}</div>
+              <div className="adjustment-panel__section-icon" aria-hidden="true">{section.icon}</div>
               <span className="adjustment-panel__section-title">{section.title}</span>
               <div
                 className={`adjustment-panel__section-chevron${
@@ -170,6 +180,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({ adjustments, onChange
             </div>
 
             <div
+              id={`adjustment-section-${section.id}`}
               className={`adjustment-panel__section-content${
                 isExpanded ? ' adjustment-panel__section-content--expanded' : ''
               }`}
@@ -188,6 +199,7 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({ adjustments, onChange
                         min={slider.min}
                         max={slider.max}
                         value={value ?? 0}
+                        aria-label={slider.label}
                         onChange={(e) =>
                           handleSliderChange(slider.key, Number(e.target.value))
                         }
@@ -209,9 +221,10 @@ const AdjustmentPanel: React.FC<AdjustmentPanelProps> = ({ adjustments, onChange
                       }`}
                       onClick={() => handleResetSlider(slider.key)}
                       title={`Reset ${slider.label}`}
+                      aria-label={`Reset ${slider.label}`}
                       disabled={isDefaultValue}
                     >
-                      <RotateCcw />
+                      <RotateCcw aria-hidden="true" />
                     </button>
                   </div>
                 );

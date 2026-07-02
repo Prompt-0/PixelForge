@@ -19,7 +19,7 @@ interface OcrPanelProps {
   onRegionSelect?: () => void;
   isProcessing: boolean;
   result: OcrResult | null;
-  onExtract: (lang: string) => void;
+  onExtract: (lang: string, engine: 'standard' | 'ai') => void;
 }
 
 const LANGUAGES = [
@@ -55,6 +55,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
   onExtract,
 }) => {
   const [selectedLang, setSelectedLang] = useState('eng');
+  const [engine, setEngine] = useState<'standard' | 'ai'>('standard');
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -94,6 +95,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
             value={selectedLang}
             onChange={(e) => setSelectedLang(e.target.value)}
             disabled={isProcessing}
+            aria-label="Language"
           >
             {LANGUAGES.map((lang) => (
               <option key={lang.value} value={lang.value}>
@@ -103,10 +105,24 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
           </select>
         </div>
 
+        <div className="ocr-panel__lang-group">
+          <label className="ocr-panel__label">Engine</label>
+          <select
+            className="ocr-panel__select"
+            value={engine}
+            onChange={(e) => setEngine(e.target.value as 'standard' | 'ai')}
+            disabled={isProcessing}
+            aria-label="Engine"
+          >
+            <option value="standard">Standard (Tesseract)</option>
+            <option value="ai">AI Model (Transformers)</option>
+          </select>
+        </div>
+
         <div className="ocr-panel__actions">
           <button
             className="ocr-panel__btn ocr-panel__btn--primary"
-            onClick={() => onExtract(selectedLang)}
+            onClick={() => onExtract(selectedLang, engine)}
             disabled={isProcessing}
           >
             {isProcessing ? (
@@ -153,6 +169,7 @@ const OcrPanel: React.FC<OcrPanelProps> = ({
               value={result.text}
               readOnly
               rows={8}
+              aria-label="Extracted Text"
             />
             <button
               className="ocr-panel__copy-btn"

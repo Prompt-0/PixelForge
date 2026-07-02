@@ -1,0 +1,15 @@
+.unified-slider-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.unified-slider-container .range-slider {
+  flex: 1;
+}
+
+.slider-number-input {
+  width: 60px;
+  text-align: center;
+}

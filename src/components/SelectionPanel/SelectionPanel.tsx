@@ -1,5 +1,6 @@
 import React from 'react';
 import { Wand2, User, Loader2 } from 'lucide-react';
+import Slider from '../Slider/Slider';
 import './SelectionPanel.css';
 
 interface SelectionPanelProps {
@@ -36,7 +37,7 @@ const SelectionPanel: React.FC<SelectionPanelProps> = ({
           Uses an in-browser Machine Learning model. The first run will download a ~40MB model file.
         </p>
         <button 
-          className="btn-primary" 
+          className="btn btn-primary" 
           onClick={onRemoveBackgroundAI}
           disabled={isProcessing}
         >
@@ -65,9 +66,11 @@ const SelectionPanel: React.FC<SelectionPanelProps> = ({
         <p className="help-text">Click on the image to flood-erase a specific color.</p>
         
         <button 
-          className={`btn-secondary ${magicWandModeActive ? 'active' : ''}`}
+          className={`btn btn-secondary ${magicWandModeActive ? 'active' : ''}`}
           onClick={() => setMagicWandModeActive(!magicWandModeActive)}
           disabled={isProcessing}
+          aria-pressed={magicWandModeActive}
+          aria-label="Toggle Magic Wand Mode"
         >
           <Wand2 size={16} /> {magicWandModeActive ? 'Click Image to Erase' : 'Activate Magic Wand'}
         </button>
@@ -75,13 +78,12 @@ const SelectionPanel: React.FC<SelectionPanelProps> = ({
 
       <div className="tool-group">
         <label>Tolerance: {magicWandTolerance}</label>
-        <input 
-          type="range" 
-          min="1" 
-          max="100" 
+        <Slider 
+          min={1} 
+          max={100} 
           value={magicWandTolerance}
-          onChange={(e) => setMagicWandTolerance(Number(e.target.value))}
-          className="slider"
+          onChange={(val) => setMagicWandTolerance(val)}
+          ariaLabel="Magic Wand Tolerance"
         />
       </div>
     </div>

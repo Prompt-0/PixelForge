@@ -180,6 +180,7 @@ const MetadataEditor: React.FC<MetadataEditorProps> = ({
           placeholder="Filter metadata fields..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Search Metadata Fields"
         />
       </div>
 
@@ -232,6 +233,7 @@ const MetadataEditor: React.FC<MetadataEditorProps> = ({
               <button
                 className="metadata-editor__section-header"
                 onClick={() => toggleSection(category)}
+                aria-expanded={isExpanded}
               >
                 <span className={`metadata-editor__chevron ${isExpanded ? 'metadata-editor__chevron--expanded' : ''}`}>
                   {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -251,6 +253,16 @@ const MetadataEditor: React.FC<MetadataEditorProps> = ({
                       <label
                         className="metadata-editor__checkbox-wrapper"
                         onClick={() => toggleField(field.name)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleField(field.name);
+                          }
+                        }}
+                        role="checkbox"
+                        aria-checked={selectedFields.includes(field.name)}
+                        tabIndex={0}
+                        aria-label={`Select ${field.name}`}
                       >
                         <span
                           className={`metadata-editor__checkbox ${selectedFields.includes(field.name) ? 'metadata-editor__checkbox--checked' : ''}`}
@@ -264,6 +276,7 @@ const MetadataEditor: React.FC<MetadataEditorProps> = ({
                           type="text"
                           className="metadata-editor__field-input"
                           defaultValue={String(field.value ?? '')}
+                          aria-label={`Edit ${field.name}`}
                           onBlur={(e) => handleFieldValueChange(field.name, e.target.value)}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {

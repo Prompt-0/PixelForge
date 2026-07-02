@@ -63,7 +63,7 @@ vi.mock('../../utils/imageAdjustments', () => ({
 describe('App Component Layout and Live Preview', () => {
   it('renders UploadZone initially', () => {
     render(<App />);
-    expect(screen.getByText(/Drag & drop/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Drag & drop/i).length).toBeGreaterThan(0);
   });
 
   it('renders workspace with Live Preview checkbox when a file is loaded', async () => {
@@ -71,11 +71,17 @@ describe('App Component Layout and Live Preview', () => {
     
     // Simulate file select
     const file = new File(['mock'], 'test.png', { type: 'image/png' });
-    const uploadInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const uploadInputs = document.querySelectorAll('input[type="file"]');
+    // The second input belongs to the single mode UploadZone
+    const uploadInput = uploadInputs[uploadInputs.length - 1] as HTMLInputElement;
     expect(uploadInput).toBeInTheDocument();
 
     // Trigger file selection
     fireEvent.change(uploadInput, { target: { files: [file] } });
+
+    // Switch to Compress tab to see Live Preview
+    const compressTab = await screen.findByTestId('tab-compress');
+    fireEvent.click(compressTab);
 
     // Wait for App to render workspace (live preview checkbox)
     await waitFor(() => {

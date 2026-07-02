@@ -32,7 +32,7 @@ import { removeBackgroundAI, magicWandSelection, type Point } from './utils/sele
 import { applyWatermark, type WatermarkOptions } from './utils/watermarkEngine';
 import { calculateHistogram, applyColorFilter, type HistogramData, type FilterType } from './utils/filterEngine';
 
-export type TabId = 'resize' | 'compress' | 'convert' | 'adjust' | 'metadata' | 'ocr' | 'cyber' | 'draw' | 'select' | 'water' | 'filter';
+export type TabId = 'resize' | 'compress' | 'convert' | 'adjust' | 'metadata' | 'ocr' | 'cyber' | 'draw' | 'select' | 'water' | 'filter' | null;
 export type AppMode = 'single' | 'batch';
 
 export interface ImageInfo {
@@ -51,7 +51,7 @@ interface ToastState {
 function App() {
   // Mode & navigation
   const [mode, setMode] = useState<AppMode>('single');
-  const [activeTab, setActiveTab] = useState<TabId>('resize');
+  const [activeTab, setActiveTab] = useState<TabId>(null);
 
   // File state
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -158,6 +158,8 @@ function App() {
         size: workingFile.size,
         format: format,
       });
+
+      if (!activeTab) setActiveTab('resize');
 
       // Auto-read metadata
       try {
@@ -344,14 +346,15 @@ function App() {
 
   // Metadata handlers
   const handleStripFields = useCallback(async (fields: string[]) => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
     setIsProcessing(true);
     try {
-      const result = await stripMetadata(originalFile, fields.length > 0 ? fields : undefined);
+      const result = await stripMetadata(targetFile, fields.length > 0 ? fields : undefined);
       await updateProcessedResult(result, 'metadata');
       // Re-read metadata from result
       try {
-        const newMeta = await readMetadata(new File([result], originalFile.name));
+        const newMeta = await readMetadata(new File([result], targetFile.name));
         setMetadata(newMeta);
       } catch {
         setMetadata(null);
@@ -362,17 +365,18 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, updateProcessedResult, showToast]);
 
   const handleUpdateFields = useCallback(async (updates: Record<string, any>) => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
     setIsProcessing(true);
     try {
-      const result = await updateMetadata(originalFile, updates);
+      const result = await updateMetadata(targetFile, updates);
       await updateProcessedResult(result, 'metadata');
       // Re-read metadata
       try {
-        const newMeta = await readMetadata(new File([result], originalFile.name));
+        const newMeta = await readMetadata(new File([result], targetFile.name));
         setMetadata(newMeta);
       } catch {
         // ignore
@@ -383,7 +387,7 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, updateProcessedResult, showToast]);
 
   const handleExportJson = useCallback(() => {
     if (!metadata) return;
@@ -394,13 +398,20 @@ function App() {
   }, [metadata, originalFile, showToast]);
 
   // OCR handlers
-  const handleOcrExtract = useCallback(async (lang: string) => {
-    if (!originalDataUrl) return;
+  const handleOcrExtract = useCallback(async (lang: string, engine: 'standard' | 'ai' = 'standard') => {
+    const targetDataUrl = processedDataUrl || originalDataUrl;
+    if (!targetDataUrl) return;
     setIsProcessing(true);
     setOcrResult(null);
     try {
-      await initOcrEngine(lang);
-      const result = await recognizeText(originalDataUrl);
+      let result;
+      if (engine === 'ai') {
+        const { recognizeTextAI } = await import('./utils/ocrEngine');
+        result = await recognizeTextAI(targetDataUrl);
+      } else {
+        await initOcrEngine(lang);
+        result = await recognizeText(targetDataUrl);
+      }
       setOcrResult(result);
       showToast(`Text extracted (${result.confidence.toFixed(1)}% confidence)`, 'success');
     } catch (err) {
@@ -408,7 +419,7 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalDataUrl, showToast]);
+  }, [originalDataUrl, processedDataUrl, showToast]);
 
   // Cleanup OCR engine on unmount
   useEffect(() => {
@@ -419,10 +430,11 @@ function App() {
 
   // Cyber handlers
   const handleCyberScan = useCallback(async () => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
     setIsProcessing(true);
     try {
-      const report = await scanForPayloads(originalFile);
+      const report = await scanForPayloads(targetFile);
       setCyberScanReport(report);
       showToast(report.isSafe ? 'Scan complete: File is safe.' : 'Scan complete: Threats detected!', report.isSafe ? 'success' : 'warning');
     } catch (err) {
@@ -430,13 +442,14 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, showToast]);
+  }, [originalFile, processedBlob, showToast]);
 
   const handleCyberEncode = useCallback(async (message: string) => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
     setIsProcessing(true);
     try {
-      const blob = await encodeSteganography(originalFile, message);
+      const blob = await encodeSteganography(targetFile, message);
       await updateProcessedResult(blob, 'cyber');
       showToast('Message encoded into image.', 'success');
     } catch (err) {
@@ -444,7 +457,7 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, updateProcessedResult, showToast]);
 
   const handleCyberDecode = useCallback(async () => {
     const fileToDecode = processedBlob ? new File([processedBlob], 'processed') : originalFile;
@@ -462,10 +475,11 @@ function App() {
   }, [originalFile, processedBlob, showToast]);
 
   const handleCyberELA = useCallback(async () => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
     setIsProcessing(true);
     try {
-      const elaDataUrl = await generateErrorLevelAnalysis(originalFile);
+      const elaDataUrl = await generateErrorLevelAnalysis(targetFile);
       const res = await fetch(elaDataUrl);
       const blob = await res.blob();
       await updateProcessedResult(blob, 'cyber_ela');
@@ -475,13 +489,14 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, updateProcessedResult, showToast]);
 
   const handleCyberDeepScrub = useCallback(async () => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
     setIsProcessing(true);
     try {
-      const blob = await deepScrub(originalFile);
+      const blob = await deepScrub(targetFile);
       await updateProcessedResult(blob, 'cyber_scrub');
       showToast('Deep scrub completed.', 'success');
     } catch (err) {
@@ -489,7 +504,7 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, updateProcessedResult, showToast]);
 
   // Draw handlers
   const handleDrawActionComplete = useCallback((action: AnnotationAction) => {
@@ -514,10 +529,12 @@ function App() {
   }, [originalFile, processedSourceTool, originalInfo]);
 
   const handleDrawApply = useCallback(async () => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
+    
     setIsProcessing(true);
     try {
-      const result = await applyAnnotations(originalFile, drawActions);
+      const result = await applyAnnotations(targetFile, drawActions);
       await updateProcessedResult(result, 'draw');
       showToast('Annotations applied!', 'success');
     } catch (err) {
@@ -525,16 +542,17 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, drawActions, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, drawActions, updateProcessedResult, showToast]);
 
   // Selection Handlers
   const handleRemoveBackgroundAI = useCallback(async () => {
-    if (!originalFile) return;
+    const targetFile = processedBlob ? new File([processedBlob], 'temp.png', { type: processedBlob.type }) : originalFile;
+    if (!targetFile) return;
     setIsProcessing(true);
     setAiProgress(0);
     setAiStatus('Starting...');
     try {
-      const result = await removeBackgroundAI(originalFile, (progress, status) => {
+      const result = await removeBackgroundAI(targetFile, (progress, status) => {
         setAiProgress(progress);
         setAiStatus(status);
       });
@@ -547,7 +565,7 @@ function App() {
       setAiStatus('');
       setAiProgress(0);
     }
-  }, [originalFile, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, updateProcessedResult, showToast]);
 
   const handleMagicWandSelection = useCallback(async (pt: Point) => {
     // If we have a processed blob, we should operate on that, otherwise operate on original
@@ -776,15 +794,24 @@ function App() {
       />
 
       <main className="app-main">
-        {mode === 'batch' ? (
+        <div className="batch-processor-container" style={{ display: mode === 'batch' ? 'flex' : 'none', flex: 1, flexDirection: 'column' }}>
           <BatchProcessor />
-        ) : !originalFile ? (
-          <div className="app-upload-container">
-            <UploadZone onFileSelect={handleFileSelect} />
-          </div>
-        ) : (
-          <div className="app-workspace">
-            <div className="app-canvas-area">
+        </div>
+        
+        <div 
+          className="app-upload-container" 
+          style={{ display: mode === 'single' && !originalFile ? 'flex' : 'none' }}
+        >
+          <UploadZone onFileSelect={handleFileSelect} />
+        </div>
+
+        <div 
+          className="app-workspace"
+          style={{ display: mode === 'single' && originalFile ? 'flex' : 'none' }}
+        >
+          {originalFile && (
+            <>
+              <div className="app-canvas-area">
               <ImagePreview
                 originalSrc={originalDataUrl!}
                 processedSrc={processedDataUrl || undefined}
@@ -795,35 +822,32 @@ function App() {
                     ? liveFilterString
                     : undefined
                 }
+                instructionText={
+                  activeTab === 'ocr' ? 'Draw a box over the text to extract' :
+                  (activeTab === 'select' && magicWandModeActive) ? 'Click on the image to flood-erase color' :
+                  undefined
+                }
                 overlay={
-                  activeTab === 'draw' && originalInfo ? (
+                  activeTab === 'draw' && (processedInfo || originalInfo) ? (
                     <DrawOverlay
-                      width={originalInfo.width}
-                      height={originalInfo.height}
+                      width={(processedInfo || originalInfo)!.width}
+                      height={(processedInfo || originalInfo)!.height}
                       currentTool={drawTool}
                       color={drawColor}
                       brushSize={drawBrushSize}
                       actions={drawActions}
                       onActionComplete={handleDrawActionComplete}
                     />
-                  ) : activeTab === 'select' && magicWandModeActive && originalInfo ? (
+                  ) : activeTab === 'select' && magicWandModeActive && (processedInfo || originalInfo) ? (
                     <SelectionOverlay
-                      width={originalInfo.width}
-                      height={originalInfo.height}
+                      width={(processedInfo || originalInfo)!.width}
+                      height={(processedInfo || originalInfo)!.height}
                       active={magicWandModeActive}
                       onPointSelected={handleMagicWandSelection}
                     />
                   ) : undefined
                 }
               />
-              {processedBlob && originalFile && (
-                <ExportPanel
-                  outputBlob={processedBlob}
-                  originalFile={originalFile}
-                  outputInfo={processedInfo || undefined}
-                  onDownload={handleDownload}
-                />
-              )}
             </div>
             <aside className="app-side-panel">
               {isProcessing && (
@@ -842,10 +866,21 @@ function App() {
                   Live Preview
                 </label>
               </div>
-              {renderToolPanel()}
+              <div className="app-side-panel-content">
+                {renderToolPanel()}
+              </div>
+              {processedBlob && originalFile && (
+                <ExportPanel
+                  outputBlob={processedBlob}
+                  originalFile={originalFile}
+                  outputInfo={processedInfo || undefined}
+                  onDownload={handleDownload}
+                />
+              )}
             </aside>
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </main>
 
       {/* Toast notifications */}

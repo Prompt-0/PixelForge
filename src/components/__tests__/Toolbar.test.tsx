@@ -105,7 +105,7 @@ describe('Toolbar Component', () => {
       />
     );
 
-    expect(screen.queryByTitle('Clear Workspace')).not.toBeInTheDocument();
+    expect(screen.queryByTitle('Clear Workspace')).toBeDisabled();
 
     rerender(
       <Toolbar

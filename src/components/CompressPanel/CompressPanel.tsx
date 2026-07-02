@@ -64,6 +64,8 @@ const CompressPanel: React.FC<CompressPanelProps> = ({
               key={fmt}
               className={`format-btn ${format === fmt ? 'active' : ''}`}
               onClick={() => setFormat(fmt as any)}
+              aria-pressed={format === fmt}
+              aria-label={`Format ${fmt.split('/')[1].toUpperCase()}`}
             >
               {fmt.split('/')[1].toUpperCase()}
             </button>
@@ -73,8 +75,8 @@ const CompressPanel: React.FC<CompressPanelProps> = ({
 
       <div className="panel__section">
         <div className="mode-toggle">
-          <button className={`mode-btn ${mode === 'quality' ? 'active' : ''}`} onClick={() => setMode('quality')}>Quality Slider</button>
-          <button className={`mode-btn ${mode === 'target' ? 'active' : ''}`} onClick={() => setMode('target')}>Target Size</button>
+          <button className={`mode-btn ${mode === 'quality' ? 'active' : ''}`} onClick={() => setMode('quality')} aria-pressed={mode === 'quality'}>Quality Slider</button>
+          <button className={`mode-btn ${mode === 'target' ? 'active' : ''}`} onClick={() => setMode('target')} aria-pressed={mode === 'target'}>Target Size</button>
         </div>
       </div>
 
@@ -90,6 +92,7 @@ const CompressPanel: React.FC<CompressPanelProps> = ({
             min="1"
             max="100"
             value={quality}
+            aria-label="Quality percentage"
             onChange={(e) => setQuality(parseInt(e.target.value))}
             disabled={format === 'image/png'}
           />
@@ -104,6 +107,7 @@ const CompressPanel: React.FC<CompressPanelProps> = ({
             min="1"
             max={Math.round(originalSize / 1024)}
             value={targetSizeKB}
+            aria-label="Target Size in KB"
             onChange={(e) => setTargetSizeKB(parseInt(e.target.value) || 1)}
             disabled={format === 'image/png'}
           />
@@ -121,6 +125,7 @@ const CompressPanel: React.FC<CompressPanelProps> = ({
               style={{ width: '100%', boxSizing: 'border-box' }}
               placeholder="e.g. 1920"
               value={maxWidth}
+              aria-label="Max Width in pixels"
               onChange={(e) => setMaxWidth(e.target.value)}
             />
           </div>
@@ -132,6 +137,7 @@ const CompressPanel: React.FC<CompressPanelProps> = ({
               style={{ width: '100%', boxSizing: 'border-box' }}
               placeholder="e.g. 1080"
               value={maxHeight}
+              aria-label="Max Height in pixels"
               onChange={(e) => setMaxHeight(e.target.value)}
             />
           </div>

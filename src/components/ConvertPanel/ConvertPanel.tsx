@@ -53,6 +53,8 @@ const ConvertPanel: React.FC<ConvertPanelProps> = ({ currentFormat, onConvert })
               key={fmt.id}
               className={`format-btn ${targetFormat === fmt.id ? 'active' : ''}`}
               onClick={() => setTargetFormat(fmt.id as any)}
+              aria-pressed={targetFormat === fmt.id}
+              aria-label={`Convert to ${fmt.label}`}
             >
               {fmt.label}
             </button>
@@ -72,6 +74,7 @@ const ConvertPanel: React.FC<ConvertPanelProps> = ({ currentFormat, onConvert })
             min="1"
             max="100"
             value={quality}
+            aria-label="Quality percentage"
             onChange={(e) => setQuality(parseInt(e.target.value))}
           />
         </div>

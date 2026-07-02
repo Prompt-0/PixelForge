@@ -40,12 +40,14 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
           <button
             className={`seg-btn ${options.type === 'text' ? 'active' : ''}`}
             onClick={() => handleTypeChange('text')}
+            aria-pressed={options.type === 'text'}
           >
             <Type size={16} /> Text
           </button>
           <button
             className={`seg-btn ${options.type === 'image' ? 'active' : ''}`}
             onClick={() => handleTypeChange('image')}
+            aria-pressed={options.type === 'image'}
           >
             <ImageIcon size={16} /> Image
           </button>
@@ -62,6 +64,7 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
               onChange={(e) => onChange({ ...options, text: e.target.value })}
               placeholder="e.g. © 2026 MyBrand"
               className="text-input"
+              aria-label="Watermark Text"
             />
           </div>
           <div className="tool-group">
@@ -72,6 +75,7 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
                 value={options.color || '#ffffff'}
                 onChange={(e) => onChange({ ...options, color: e.target.value })}
                 className="color-input"
+                aria-label="Watermark Color"
               />
               <span className="color-hex">{(options.color || '#ffffff').toUpperCase()}</span>
             </div>
@@ -88,6 +92,7 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
               type="file" 
               accept="image/png, image/svg+xml, image/jpeg" 
               onChange={handleImageUpload} 
+              aria-label="Upload Image Logo"
             />
           </div>
         </div>
@@ -99,6 +104,7 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
           value={options.position}
           onChange={(e) => onChange({ ...options, position: e.target.value as WatermarkPosition })}
           className="select-input"
+          aria-label="Watermark Position"
         >
           <option value="center">Center</option>
           <option value="top-left">Top Left</option>
@@ -119,6 +125,7 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
           value={options.opacity}
           onChange={(e) => onChange({ ...options, opacity: parseFloat(e.target.value) })}
           className="slider"
+          aria-label="Watermark Opacity"
         />
       </div>
 
@@ -132,6 +139,7 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
           value={options.scale}
           onChange={(e) => onChange({ ...options, scale: parseFloat(e.target.value) })}
           className="slider"
+          aria-label="Watermark Scale"
         />
       </div>
 
@@ -145,6 +153,7 @@ const WatermarkPanel: React.FC<WatermarkPanelProps> = ({
           value={options.rotation}
           onChange={(e) => onChange({ ...options, rotation: parseInt(e.target.value, 10) })}
           className="slider"
+          aria-label="Watermark Rotation"
         />
       </div>
 

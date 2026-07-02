@@ -85,8 +85,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           {histogramData ? (
             <canvas ref={canvasRef} width={280} height={120} className="histogram-canvas" />
           ) : (
-            <div className="histogram-placeholder">
-              <p>Analyzing image...</p>
+            <div className="empty-state">
+              <BarChart2 size={32} className="text-muted" />
+              <p>Awaiting image data...</p>
             </div>
           )}
         </div>
@@ -101,6 +102,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               className={`filter-btn ${activeFilter === filter.id ? 'active' : ''}`}
               onClick={() => onApplyFilter(filter.id)}
               disabled={isProcessing}
+              aria-pressed={activeFilter === filter.id}
+              aria-label={`Apply ${filter.label} filter`}
             >
               {filter.label}
             </button>

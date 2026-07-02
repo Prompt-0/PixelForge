@@ -144,13 +144,28 @@ const DrawOverlay: React.FC<DrawOverlayProps> = ({
     setIsDrawing(false);
     
     if (currentPath.length > 0) {
-      onActionComplete({
+      const action: AnnotationAction = {
         id: Date.now().toString(),
         tool: currentTool,
         color,
         size: brushSize,
-        points: currentPath
-      });
+        points: currentPath,
+      };
+
+      // For shape tools, compute the rect from start and end points
+      // so that applyAnnotations() can correctly render them
+      if (currentTool !== 'freehand' && currentPath.length >= 2) {
+        const start = currentPath[0];
+        const end = currentPath[currentPath.length - 1];
+        action.rect = {
+          x: start.x,
+          y: start.y,
+          w: end.x - start.x,
+          h: end.y - start.y,
+        };
+      }
+
+      onActionComplete(action);
     }
     setCurrentPath([]);
   };

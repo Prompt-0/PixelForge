@@ -178,7 +178,7 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [showToast]);
+  }, [showToast, activeTab]);
 
   // Helper to update processed result
   const updateProcessedResult = useCallback(async (blob: Blob, sourceTool?: string) => {
@@ -592,13 +592,11 @@ function App() {
     if (!targetFile) return;
 
     if (filter === 'none') {
-      // Just revert if it's the last tool used
-      if (processedSourceTool === 'filter') {
-        setProcessedBlob(null);
-        fileToDataUrl(originalFile!).then(setProcessedDataUrl);
-        setProcessedInfo(originalInfo || null);
-        setProcessedSourceTool(null);
-      }
+      // Revert visual state — clear processed result so download panel disappears
+      setProcessedBlob(null);
+      setProcessedDataUrl(null);
+      setProcessedInfo(null);
+      setProcessedSourceTool(null);
       return;
     }
 

@@ -36,6 +36,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   const [zoom, setZoom] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -77,7 +78,15 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   }, []);
 
   const handleZoomFit = useCallback(() => {
-    setZoom(1);
+    const container = containerRef.current;
+    const image = imageRef.current;
+    if (container && image && image.naturalWidth > 0 && image.naturalHeight > 0) {
+      const scaleX = container.clientWidth / image.naturalWidth;
+      const scaleY = container.clientHeight / image.naturalHeight;
+      setZoom(Math.min(scaleX, scaleY, 1));
+    } else {
+      setZoom(1);
+    }
   }, []);
 
   const handleZoom100 = useCallback(() => {
@@ -93,6 +102,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
         {!hasComparison && (
           <div className="image-preview__single">
             <img
+              ref={imageRef}
               src={originalSrc}
               alt="Original"
               className="image-preview__image"

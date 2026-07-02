@@ -82,7 +82,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         {hasImage && (
           <>
             <div className="toolbar__divider" />
-            <button className="btn btn-ghost btn-sm close-btn" onClick={onClear} title="Clear Workspace">
+            <button className="btn btn-ghost btn-sm close-btn" onClick={onClear} title="Clear Workspace" aria-label="Clear Workspace">
               <Trash2 size={16} />
             </button>
           </>

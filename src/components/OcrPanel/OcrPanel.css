@@ -320,7 +320,7 @@
 }
 
 .ocr-panel__block-item:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-glass);
 }
 
 .ocr-panel__block-text {

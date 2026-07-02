@@ -184,7 +184,7 @@
   display: inline-block;
   padding: 0.25rem 0.625rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--bg-glass);
   border: 1px solid var(--border-glass);
   color: var(--text-muted);
   font-family: var(--font-sans);

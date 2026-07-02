@@ -193,13 +193,15 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
           className="image-preview__zoom-btn"
           onClick={handleZoomFit}
           title="Fit to view"
+          aria-label="Fit to view"
         >
           <Maximize size={16} />
         </button>
         <button
           className="image-preview__zoom-btn"
           onClick={handleZoom100}
-          title="100%"
+          title="Zoom to 100%"
+          aria-label="Zoom to 100%"
         >
           <Minimize2 size={16} />
         </button>
@@ -207,6 +209,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
           className="image-preview__zoom-btn"
           onClick={handleZoomOut}
           title="Zoom out"
+          aria-label="Zoom out"
         >
           <ZoomOut size={16} />
         </button>
@@ -214,10 +217,11 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
           className="image-preview__zoom-btn"
           onClick={handleZoomIn}
           title="Zoom in"
+          aria-label="Zoom in"
         >
           <ZoomIn size={16} />
         </button>
-        <span className="image-preview__zoom-level">
+        <span className="image-preview__zoom-level" aria-label={`Current zoom level is ${Math.round(zoom * 100)} percent`}>
           {Math.round(zoom * 100)}%
         </span>
       </div>

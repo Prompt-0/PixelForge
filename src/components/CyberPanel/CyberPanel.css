@@ -87,12 +87,12 @@
 }
 
 .cyber-btn.secondary {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-glass-hover);
   color: var(--text-primary);
 }
 
 .cyber-btn.secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--bg-glass-hover);
 }
 
 .cyber-btn.danger {

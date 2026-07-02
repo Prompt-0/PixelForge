@@ -43,8 +43,8 @@
 }
 
 .filter-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: var(--bg-glass-hover);
+  border-color: var(--border-active);
 }
 
 .filter-btn.active {

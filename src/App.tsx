@@ -627,7 +627,7 @@ function App() {
     } finally {
       setIsProcessing(false);
     }
-  }, [originalFile, processedBlob, originalInfo, processedSourceTool, updateProcessedResult, showToast]);
+  }, [originalFile, processedBlob, updateProcessedResult, showToast]);
 
   // Download handler
   const handleDownload = useCallback(() => {

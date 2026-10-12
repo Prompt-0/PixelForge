@@ -22,3 +22,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test artifacts & reports
+test-results/
+playwright-report/
+*.txt
+.last-run.json
+
+# Screen recordings & media dumps
+*.mp4
+*.mov
+
+# Agent logs
+.agents/

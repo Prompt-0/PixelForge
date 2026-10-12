@@ -1,90 +1,105 @@
-# Image Manipulator Web Application
+# PixelForge
 
-A powerful, 100% client-side web application for advanced image manipulation, editing, and analysis. Built with React and TypeScript, this application provides a suite of professional-grade tools that run entirely in the browser, ensuring user privacy and data security.
+[![Live Demo](https://img.shields.io/badge/demo-live%20app-success?style=for-the-badge&logo=github)](https://prompt-0.github.io/PixelForge/)
+[![Tests](https://img.shields.io/badge/tests-89%2F89%20passing-brightgreen?style=for-the-badge&logo=vitest)](https://github.com/Prompt-0/PixelForge)
+[![E2E](https://img.shields.io/badge/e2e-playwright%20verified-blue?style=for-the-badge&logo=playwright)](https://github.com/Prompt-0/PixelForge)
+[![Stack](https://img.shields.io/badge/stack-React%2019%20•%20TypeScript%20•%20Vite-61dafb?style=for-the-badge)](https://github.com/Prompt-0/PixelForge)
+[![Privacy](https://img.shields.io/badge/privacy-100%25%20client--side-orange?style=for-the-badge)](https://prompt-0.github.io/PixelForge/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 
-## 🌟 Key Philosophy & Architecture
-- **Client-Side Only**: All processing (including AI background removal and OCR) runs locally in the browser. No images are ever uploaded to a server.
-- **Privacy-First**: Ideal for sensitive documents and personal photos.
-- **State Architecture**: Uses a robust, unified state management system (`App.tsx`) with modular, highly-specialized engine utilities for distinct features.
-- **Live Preview System**: Instant visual feedback for operations with the ability to toggle live previews on or off for better performance on large images.
+A privacy-first, 100% browser-native image editing, forensic analysis, and neural processing studio. PixelForge runs entirely inside the client sandbox using WebAssembly and Web Workers—zero images, buffers, or metadata are ever uploaded to a remote server.
 
----
-
-## 🛠️ Feature Breakdown
-
-### 1. Core Editing & Adjustments
-* **Basic Operations**: Crop, rotate, horizontal/vertical flip, and aspect-ratio constrained resizing.
-* **Tuning Sliders**: Fine-tune Brightness, Contrast, Saturation, Blur, Exposure, and Hue.
-* **Format Conversion & Compression**: Compress images on the fly to `JPEG` or `WEBP` formats with an interactive quality slider to hit specific file-size targets.
-
-### 2. Advanced Selection Tools (`selectionEngine.ts`)
-* **AI Background Removal**: Uses `@xenova/transformers` with the `briaai/RMBG-1.4` model to seamlessly cut out subjects from their backgrounds. (Downloads model once locally, then runs offline).
-* **Magic Wand**: A custom stack-based flood fill algorithm that selects and erases contiguous areas of similar color, with adjustable tolerance.
-
-### 3. Annotation & Drawing (`annotationEngine.ts`)
-* **Shapes & Text**: Overlay custom text, rectangles, and ellipses.
-* **Freehand Drawing**: Paint directly onto the image with adjustable brush sizes and colors.
-* **Redaction/Blur Tool**: Censor sensitive information by drawing localized blur boxes.
-* **Non-Destructive Stack**: Supports full undo/redo capabilities for drawings before applying them to the image.
-
-### 4. Color Analytics & Filters (`filterEngine.ts`)
-* **Live Histograms**: Real-time rendering of RGB and Luma channels to visualize the image's tonal distribution.
-* **Preset Filters**: Instagram-style LUT presets including `Grayscale`, `Sepia`, `Vintage`, `Cool`, `Warm`, `Dramatic`, and `Invert`.
-
-### 5. Watermarking (`watermarkEngine.ts`)
-* **Text Overlays**: Add copyright or custom text.
-* **Image Compositing**: Overlay logos (e.g., PNGs with transparency).
-* **Controls**: Granular control over Opacity, Scale, Rotation, and Position (Top-Left, Center, Bottom-Right, etc.).
-
-### 6. OCR (Optical Character Recognition) (`ocrEngine.ts`)
-* Extract text directly from images using `Tesseract.js`.
-* Supports multiple languages and provides confidence scores for the recognized text.
-
-### 7. Cybersecurity & Forensics (`cyberSecurity.ts`)
-* **Steganography**: Encode hidden text messages into image pixels (LSB steganography), and decode them back.
-* **Error Level Analysis (ELA)**: Highlight discrepancies in JPEG compression rates to detect digitally manipulated or spliced images.
-* **Payload Scanner**: Scans image buffers for malicious scripts or hidden executable signatures (e.g., PHP, JS, Shell scripts).
-* **Deep Scrubbing**: Sanitizes the image by stripping all EXIF metadata and purging any embedded payloads, ensuring the output file is completely safe to share.
+### 🌐 [Launch Live Demo](https://prompt-0.github.io/PixelForge/)
 
 ---
 
-## 🏗️ Technical Stack
+## ⚡ Key Capabilities
 
-- **Framework**: React 18, TypeScript, Vite
-- **Styling**: Vanilla CSS with modern UI/UX design patterns (glassmorphism, clean layouts).
-- **Icons**: Lucide React
-- **AI/ML**: Xenova Transformers.js (for local background removal)
-- **Image Processing**: Native HTML5 Canvas API (for performance and zero-dependency pixel manipulation)
-- **Testing**: Vitest with JSDOM for robust unit testing across all specialized engines.
+### 1. Neural & Vision Tools (100% Offline)
+- **Local AI Background Removal**: Executes the `briaai/RMBG-1.4` neural network locally via `@xenova/transformers` in WebAssembly/Web Workers. Runs offline after initial cache.
+- **Optical Character Recognition (OCR)**: Extracts text blocks and confidence scores directly from document images using `Tesseract.js`.
+- **Magic Wand Selection**: Stack-based flood fill algorithm with dynamic color distance thresholding for contiguous pixel segment isolation.
+
+### 2. Digital Forensics & Steganography
+- **LSB Steganography**: Encodes and decodes encrypted payload strings directly into image least-significant bits.
+- **Error Level Analysis (ELA)**: Resaves at calibrated quantization tables to highlight compression inconsistencies and detect digital splicing or manipulation.
+- **Payload & Script Scanner**: Scans binary buffers for concealed executable signatures, shell scripts, or embedded polyglots.
+- **EXIF Scrubbing**: Deep-cleans image headers, stripping geolocation, camera serial numbers, and device tags before export.
+
+### 3. Professional Editing & Enhancements
+- **Color & Channel Analytics**: Real-time RGB and Luma tonal distribution histograms rendered on high-frequency canvas loops.
+- **Parametric Adjustments**: Brightness, Contrast, Saturation, Exposure, Hue, and Gaussian blur with real-time preview toggling.
+- **Watermarking & Compositing**: Alpha-blended text and logo overlays with rotation, positioning matrix, and opacity controls.
+- **Vector Annotations & Redaction**: Freehand brush strokes, geometric primitives, and localized blur/censorship masks with undo/redo history.
+- **Format Conversion & Compression**: Live multi-format transcode to JPEG, PNG, WebP, AVIF, and BMP with targeted compression quality sliders.
+
+---
+
+## 🏛️ Architecture & Verification
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                   React 19 Workspace UI                  │
+└──────────────┬────────────────────────────┬──────────────┘
+               │                            │
+   ┌───────────▼──────────┐      ┌──────────▼───────────┐
+   │ Canvas Manipulation  │      │   Forensic Engine    │
+   │ • Image adjustments  │      │ • LSB steganography  │
+   │ • Watermark & Draw   │      │ • ELA error analysis │
+   │ • Channel Histograms │      │ • EXIF sanitization  │
+   └───────────┬──────────┘      └──────────┬───────────┘
+               │                            │
+   ┌───────────▼────────────────────────────▼───────────┐
+   │             Off-Thread Worker Pipelines            │
+   │  • Transformers.js (RMBG-1.4 Neural Segmentation)  │
+   │  • Tesseract.js (WASM Multilingual OCR)            │
+   └────────────────────────────────────────────────────┘
+```
+
+- **Zero-Network Invariant**: Network activity is restricted solely to static asset hydration. All image processing pipelines execute against in-memory `Blob` and `HTMLCanvasElement` targets.
+- **Automated Test Coverage**:
+  - **89 unit & integration tests** in Vitest validating adjustment math, conversion codecs, steganographic bit-packing, and UI component state.
+  - **Playwright E2E suite** verifying file upload lifecycles, live preview toggles, and multi-format exports in headless Chromium.
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-Make sure you have Node.js installed.
+- Node.js 20+
+- npm or pnpm
 
-### Installation
-1. Navigate to the project directory:
-   ```bash
-   cd Image_Manipulator
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-### Building for Production
-To create a production-ready bundle:
+### Installation & Local Development
 ```bash
+# Clone the repository
+git clone https://github.com/Prompt-0/PixelForge.git
+
+# Navigate into project directory
+cd PixelForge
+
+# Install dependencies
+npm install
+
+# Start Vite development server
+npm run dev
+```
+
+### Verification & Testing
+```bash
+# Run the complete unit test suite (89 tests)
+npm run test:run
+
+# Run code linter
+npm run lint
+
+# Run Playwright end-to-end tests
+npm run test:e2e
+
+# Build production bundle
 npm run build
 ```
-This will compile the TypeScript code and generate static files in the `dist` directory.
 
-### Running Tests
-To run the automated test suite (which covers UI components and the processing engines):
-```bash
-npm run test
-```
+---
+
+## 📄 License
+This project is licensed under the MIT License.

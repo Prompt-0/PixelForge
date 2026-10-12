@@ -217,7 +217,7 @@ export async function getFileFormat(file: File): Promise<string> {
 
     // Fallback to file's type property
     return file.type || 'application/octet-stream';
-  } catch (error) {
+  } catch {
     // If header reading fails, fall back to file.type
     return file.type || 'application/octet-stream';
   }

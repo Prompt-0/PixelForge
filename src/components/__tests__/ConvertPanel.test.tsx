@@ -29,7 +29,7 @@ describe('ConvertPanel Component', () => {
     );
 
     // Target defaults to PNG (lossless) when current is JPEG
-    expect(screen.getByRole('button', { name: 'PNG' })).toHaveClass('active');
+    expect(screen.getByRole('button', { name: 'Convert to PNG' })).toHaveClass('active');
     expect(screen.queryByRole('slider')).not.toBeInTheDocument();
   });
 
@@ -66,7 +66,7 @@ describe('ConvertPanel Component', () => {
     const stripCheckbox = screen.getByLabelText('Strip EXIF Metadata');
     fireEvent.click(stripCheckbox);
 
-    const convertBtn = screen.getByRole('button', { name: /Convert/i });
+    const convertBtn = screen.getByRole('button', { name: /^Convert$/i });
     fireEvent.click(convertBtn);
 
     expect(onConvert).toHaveBeenCalledWith({

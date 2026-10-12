@@ -126,7 +126,7 @@ describe('ResizePanel Component', () => {
     );
 
     // Click 90° preset
-    const preset90 = screen.getByRole('button', { name: '90°' });
+    const preset90 = screen.getByRole('button', { name: 'Rotate 90 degrees' });
     fireEvent.click(preset90);
 
     expect(onRotate).toHaveBeenCalledWith(90);

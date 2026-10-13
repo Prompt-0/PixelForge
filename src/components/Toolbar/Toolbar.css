@@ -1,14 +1,15 @@
 .toolbar {
-  height: var(--toolbar-height);
+  min-height: var(--toolbar-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--space-6);
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
   z-index: var(--z-sticky);
+  flex-shrink: 0;
   border-radius: 0;
   border-left: none;
   border-right: none;
@@ -19,6 +20,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  flex-shrink: 0;
 }
 
 .brand-logo {
@@ -200,12 +202,12 @@
   background: var(--error-dim);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1600px) {
   .toolbar {
     flex-wrap: wrap;
     height: auto;
     min-height: var(--toolbar-height);
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-2) var(--space-4);
     gap: var(--space-2);
   }
   
@@ -215,10 +217,12 @@
   
   .toolbar__actions {
     order: 2;
+    margin-left: auto;
   }
   
   .toolbar__nav {
     order: 3;
+    flex: 0 0 100%;
     width: 100%;
     padding-bottom: var(--space-2);
   }
